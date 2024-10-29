@@ -1,10 +1,11 @@
-module cpu_alu (bus_out, a, b);
-input [3:0] a;
-input [3:0] b; 
+module cpu_alu (bus_out, c, d, c_eq_d, s_ov);
+input [3:0] c;
+input [3:0] d; 
 output [3:0] bus_out;
-
+output c_eq_d, s_ov;
+wire [3:0] alu_out;
 assign bus_out = alu_out;
-wire [4:0] sum = a + b;
-wire [3:0]alu_out = sum[3:0];
+assign {s_ov, alu_out} = c + d;
+assign c_eq_d = c == d;
 
 endmodule

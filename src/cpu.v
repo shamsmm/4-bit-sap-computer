@@ -2,9 +2,10 @@ module cpu(clk, rst, port_out);
 input clk, rst;
 output [3:0] port_out;
 
-// data and address lines (shared bus)
+// data and address lines (shared bus using mux or tri-state buffers)
 reg [7:0] bus = 8'bZ;
 
+// output of differnet modules, should share on bus
 wire [7:0] mem_out;
 wire [3:0] pc_out;
 wire [3:0] reg_a_out;
@@ -41,12 +42,16 @@ cpu_out_reg reg_out(bus[3:0], clk, rst, lo, port_out);
 // program counter
 cpu_pc  pc(bus[3:0], pc_out, clk, rst, lp, c);
 
+// program memory 8 bits by 16 address
 cpu_mem mem(bus, mem_out, clk, rst, lm);
 
-cpu_alu alu(alu_out, reg_c_out, reg_d_out);
+// simple adder
+cpu_alu alu(alu_out, reg_c_out, reg_d_out, c_eq_d, s_ov);
 
+// orchestrator
 cpu_control cu(bus, clk, rst, {lp, ep}, {c_eq_d, s_ov});
 
+// bus priority encoder
 always @(*)
     if (ep)
         bus = pc_out;
@@ -58,6 +63,8 @@ always @(*)
         bus = mem_out;
     else if (es)
         bus = alu_out;
+    else
+        bus = 8'bZ;
 
 
 endmodule
