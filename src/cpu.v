@@ -13,6 +13,7 @@ wire [3:0] reg_b_out;
 wire [3:0] reg_c_out;
 wire [3:0] reg_d_out;
 wire [3:0] alu_out;
+wire [3:0] reg_ir_upper_out, reg_ir_lower_out;
 
 // control lines
 wire lp, ep, c, // program counter
@@ -49,7 +50,9 @@ cpu_mem mem(bus, mem_out, clk, rst, lm);
 cpu_alu alu(alu_out, reg_c_out, reg_d_out, c_eq_d, s_ov);
 
 // orchestrator
-cpu_control cu(bus, clk, rst, {lp, ep}, {c_eq_d, s_ov});
+cpu_reg reg_ir_upper(bus[7:4], reg_ir_upper_out, clk, rst, li);
+cpu_reg reg_ir_lower(bus[3:0], reg_ir_lower_out, clk, rst, li);
+cpu_control cu(bus, clk, rst, reg_ir_upper_out, {eb, c, lc, ld, ep, lp, ea, la, lb, es, lm, em, li, ei, lo}, {c_eq_d, s_ov});
 
 // bus priority encoder
 always @(*)
@@ -63,6 +66,8 @@ always @(*)
         bus = mem_out;
     else if (es)
         bus = alu_out;
+    else if (ei)
+        bus = reg_ir_lower_out;
     else
         bus = 8'bZ;
 
