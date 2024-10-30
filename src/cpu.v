@@ -3,7 +3,7 @@ input clk, rst;
 output [3:0] port_out;
 
 // data and address lines (shared bus using mux or tri-state buffers)
-reg [7:0] bus = 8'bZ;
+reg [7:0] bus;
 
 // output of differnet modules, should share on bus
 wire [7:0] mem_out;
@@ -35,8 +35,8 @@ cpu_reg reg_a(bus[3:0], reg_a_out, clk, rst, la);
 cpu_reg reg_b(bus[3:0], reg_b_out, clk, rst, lb);
 
 // write only registers, for ALU
-cpu_reg reg_c(bus[3:0], reg_c_out, clk, rst, la);
-cpu_reg reg_d(bus[3:0], reg_d_out, clk, rst, la);
+cpu_reg reg_c(bus[3:0], reg_c_out, clk, rst, lc);
+cpu_reg reg_d(bus[3:0], reg_d_out, clk, rst, ld);
     
 cpu_out_reg reg_out(bus[3:0], clk, rst, lo, port_out);
 
@@ -57,19 +57,19 @@ cpu_control cu(bus, clk, rst, reg_ir_upper_out, {eb, c, lc, ld, ep, lp, ea, la, 
 // bus priority encoder
 always @(*)
     if (ep)
-        bus = pc_out;
+        bus <= pc_out;
     else if (ea)
-        bus = reg_a_out;
+        bus <= reg_a_out;
     else if (eb)
-        bus = reg_b_out;
+        bus <= reg_b_out;
     else if (em)
-        bus = mem_out;
+        bus <= mem_out;
     else if (es)
-        bus = alu_out;
+        bus <= alu_out;
     else if (ei)
-        bus = reg_ir_lower_out;
+        bus <= reg_ir_lower_out;
     else
-        bus = 8'bZ;
+        bus <= 8'b0;
 
 
 endmodule

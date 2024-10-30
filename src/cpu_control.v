@@ -9,16 +9,13 @@ input [1:0] flag_lines;
 // instruction in execution
 input [3:0] reg_ir;
 
-reg [1:0] counter;
-reg [2:0] sum;
+reg [1:0] counter = 0;
 
 always @(posedge clk, negedge rst)
-    if (!rst)
-        counter = 0;
-    else 
-        counter = counter + 1;
+        if (!rst) counter <= 0;
+        else counter <= counter + 1;
 
-always @(posedge clk) begin
+always @(*) begin
     control_lines <= 0;
 
     case(counter)

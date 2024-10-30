@@ -1,18 +1,19 @@
 module test;
 
-reg clk;
-wire rst = 1'b1;
+reg clk = 1;
+reg rst = 1;
 wire [3:0] out;
 
 initial begin
-    clk = 1'b0;
-
     $dumpfile("test.fst");
-    $dumpvars(0, clk);
-    $dumpvars(1, out);
-    $dumpvars(2, dut.bus);
+    $dumpvars(0, test);
 
-    #50
+    #(1) ;
+    rst = 1'b0;
+    #(1) ;
+    rst = 1'b1;
+
+    #5000
     $finish;
 end
 
@@ -33,7 +34,7 @@ assign data = rom_out;
 reg [7:0] rom_out;
 
 initial begin
-   $readmemb("test/rom.txt", rom);
+   $readmemb("test/rom.txt", rom, 0, 15);
 end
 
 always @(address)

@@ -9,9 +9,9 @@ assign port_out = data;
 
 always @(posedge clk, negedge rst) begin
     if (!rst)
-        data = 0;
+        data <= 0;
     else 
-        if (l) data = bus_in;
+        if (l) data <= bus_in;
 end
 
 endmodule
