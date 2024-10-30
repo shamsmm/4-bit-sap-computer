@@ -1,3 +1,6 @@
 impl/
 *.gprj*
+*_tmp.v
+*.ipc
+*.mod
 .idea/
