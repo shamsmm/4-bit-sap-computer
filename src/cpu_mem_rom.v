@@ -6,6 +6,6 @@ assign bus_out = rom_out;
 
 wire [7:0] rom_out;
 
-gowin_rom16 rom(rom_out, address);
+rom16 rom(rom_out, address);
 
 endmodule

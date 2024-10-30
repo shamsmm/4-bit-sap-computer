@@ -7,7 +7,7 @@
 //Device Version: C
 //Created Time: Wed Oct 30 10:50:22 2024
 
-module gowin_rom16 (dout, ad);
+module rom16 (dout, ad);
 
 output [7:0] dout;
 input [3:0] ad;

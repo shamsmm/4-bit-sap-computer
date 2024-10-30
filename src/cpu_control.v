@@ -12,44 +12,40 @@ input [3:0] reg_ir;
 reg [1:0] counter;
 reg [2:0] sum;
 
-always @(posedge clk, negedge rst) begin
-    if (!rst) begin
-        counter <= 0;
-    end else begin
-        case(counter)
-            2'b00: begin
-                control_lines = `EP|`LM;
-                sum = counter + 1;
-                counter = sum[1:0];
-            end
-            2'b01: begin
-                control_lines = `C|`LI|`EM;
-                sum = counter + 1;
-                counter = sum[1:0];
-            end
-            2'b10: begin
-                case(reg_ir)
-                    `LD_A: control_lines = `LA|`EI;
-                    `LD_B: control_lines = `LB|`EI;
-                    `LD_C: control_lines = `LC|`EI;
-                    `LD_D: control_lines = `LD|`EI;
-                    `MOV_A_B: control_lines = `LB|`EA;
-                    `MOV_A_C: control_lines = `LC|`EA;
-                    `MOV_A_D: control_lines = `LD|`EA;
-                    `MOV_B_A: control_lines = `LA|`EB;
-                    `MOV_B_C: control_lines = `LC|`EB;
-                    `MOV_B_D: control_lines = `LD|`EB;
-                    `ADD_A: control_lines = `LA|`ES;
-                    `OUT_A: control_lines = `EA|`LO;
-                    `JMP: control_lines = `EI|`LP;
-                    `JMP_CN: if (flag_lines[0]) control_lines = `EI|`LP;
-                    `JMP_NCN: if (!flag_lines[0]) control_lines = `EI|`LP;
-                endcase
-            end
-            2'b11: begin
-            end
-        endcase
-    end
+always @(posedge clk, negedge rst)
+    if (!rst)
+        counter = 0;
+    else 
+        counter = counter + 1;
+
+always @(posedge clk) begin
+    control_lines <= 0;
+
+    case(counter)
+        2'b00: control_lines <= `EP|`LM;
+        2'b01: control_lines <= `C|`LI|`EM;
+        2'b10: begin
+            case(reg_ir)
+                `LD_A: control_lines <= `LA|`EI;
+                `LD_B: control_lines <= `LB|`EI;
+                `LD_C: control_lines <= `LC|`EI;
+                `LD_D: control_lines <= `LD|`EI;
+                `MOV_A_B: control_lines <= `LB|`EA;
+                `MOV_A_C: control_lines <= `LC|`EA;
+                `MOV_A_D: control_lines <= `LD|`EA;
+                `MOV_B_A: control_lines <= `LA|`EB;
+                `MOV_B_C: control_lines <= `LC|`EB;
+                `MOV_B_D: control_lines <= `LD|`EB;
+                `ADD_A: control_lines <= `LA|`ES;
+                `OUT_A: control_lines <= `EA|`LO;
+                `JMP: control_lines <= `EI|`LP;
+                `JMP_CN: if (flag_lines[0]) control_lines <= `EI|`LP;
+                `JMP_NCN: if (!flag_lines[0]) control_lines <= `EI|`LP;
+            endcase
+        end
+        2'b11: begin
+        end
+    endcase
 end
 
 endmodule
