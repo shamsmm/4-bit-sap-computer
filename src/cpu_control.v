@@ -13,7 +13,7 @@ reg [1:0] counter = 0;
 
 always @(posedge clk, negedge rst)
         if (!rst) counter <= 0;
-        else counter <= counter + 1;
+        else counter <= {counter + 1}[1:0];
 
 always @(*) begin
     control_lines <= 0;

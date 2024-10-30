@@ -12,7 +12,7 @@ always @(posedge clk, negedge rst) begin
     end else begin
         if (lp) counter <= bus_in;
         else 
-            if (c) counter <= counter + 1;
+            if (c) counter <= {counter + 1}[3:0];
             else counter <= counter;
     end
 end
